@@ -2,19 +2,19 @@ from tkinter import *
 from tkinter import filedialog
 
 BLACK = '#1c1c1c'
-run = False
 
 
 class MyMenu(Menu):
-    def __init__(self, file_text):
+    def __init__(self, file_text, app):
         super().__init__()
+        self.app = app
         self.file_text = file_text
         self.file_menu = Menu(self, tearoff=0)
         self.add_cascade(label="file", menu=self.file_menu)
         self.file_menu.add_command(label="Open", command=self.open_file)
         self.file_menu.add_command(label="Save", command=self.save_file)
         self.file_menu.add_separator()
-        self.file_menu.add_command(label="Exit", command=quit)
+        self.file_menu.add_command(label="Exit", command=self.quit)
         self.file_type = [ ('Text File', '.txt'), ('All Files', '.*')]
 
     def open_file(self):
@@ -32,6 +32,9 @@ class MyMenu(Menu):
         file.write(str(self.file_text.text.get(1.0, END)))
         file.close()
 
+    def quit(self):
+        self.app.destroy()
+
 
 class TextBox(Frame):
     def __init__(self, root):
@@ -48,7 +51,7 @@ class App(Tk):
         self.geometry('1020x500')
         self.resizable(width=False, height=False)
         self.textbox = TextBox(self)
-        self.menu = MyMenu(self.textbox)
+        self.menu = MyMenu(self.textbox, self)
         self.config(menu=self.menu)
 
 
